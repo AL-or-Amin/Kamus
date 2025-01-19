@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reme Game with BET</title>
+  <style>
+  .hij {
+    color: green;
+  }
+  .hijtua {
+    color: #4CAF50;
+  }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    .dl-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .dl-container img {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+    }
+    .roulette-container {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      margin: 20px auto;
+      border-radius: 50%;
+      border: 5px solid #000;
+      overflow: hidden;
+    }
+    .roulette-wheel {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: conic-gradient(
+        red 0% 10%, black 10% 20%, red 20% 30%, black 30% 40%, 
+        red 40% 50%, black 50% 60%, red 60% 70%, black 70% 80%, 
+        red 80% 90%, black 90% 100%
+      );
+      transform: rotate(0deg);
+    }
+    .spin-button, .bet-button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .spin-button:disabled, .bet-button:disabled {
+      background-color: #888;
+      cursor: not-allowed;
+    }
+    .info-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #ADD8E6;
+      color: white;
+      font-size: 24px;
+      border: none;
+      cursor: pointer;
+    }
+    .result-table {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px 0;
+    }
+    .result-box {
+      width: 300px;
+      padding: 10px;
+      margin: 5px 0;
+      background-color: #f1f1f1;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      transition: border-color 0.3s, background-color 0.3s;
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      padding: 20px;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    .popup.active {
+      display: block;
+    }
+    .popup .close-btn {
+      margin-top: 10px;
+      padding: 5px 10px;
+      font-size: 14px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .popup .close-btn:hover {
+      background-color: #d32f2f;
+    }
+    @keyframes spin-animation {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(1440deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Reme BET <img src="images/faran.png" width="30" height="30" alt="DL"></h1>
+  <div class="dl-container">
+    <img src="images/DL.png" alt="DL">
+    <span id="dl-display">10</span>
+  </div>
+
+  <div class="result-table">
+    <div id="admin-result" class="result-box">Admin spun wheel got </div>
+    <div class="roulette-container">
+      <div id="roulette-wheel" class="roulette-wheel"></div>
+    </div>
+    <div id="player-result" class="result-box">You spun wheel got </div>
+  </div>
+
+  <button id="spin-button" class="spin-button" onclick="spin()">Spin</button>
+  <button id="bet-button" class="bet-button" onclick="placeBet()">BET</button>
+  <button id="info-button" class="info-button">i</button>
+
+<!-- Popup Informasi -->
+<div id="info-popup" class="popup">
+  <p>Cara Bermain:</p>
+  <p>1. Angka Player lebih besar = Winn</p>
+  <p>2. Angka Player lebih kecil = Lose</p>
+  <p>3. Angka Player Seri = Auto Lose</p>
+  <p>4. Angka 0, 19, 28 = x3 Bet anda</p>
+  <p>5. Admin 0, 19, 28 = Auto Lose</p>
+  <p>- - -</p>
+  <p class="hij">Anda bisa mengatur taruhan</p>
+  <p class="hij">dengan mencet BET!</p>
+  <p class="hij">Maksimal BET 10DL</p>
+  <p class="hijtua">DL anda habis? refresh web saja</p>
+   <img src="images/faran.png" width="110" height="90" alt="DL">
+   <p> Wujud asli Pemain Judi</p>
+  <button id="close-info" class="close-btn">Tutup</button>
+</div>
+  <script src="script.js"></script>
+</body>
+</html>
