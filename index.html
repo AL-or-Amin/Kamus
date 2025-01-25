@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akun EpEp</title>
+    <title>Hutang Tracker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -63,7 +63,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Akun Epep</h1>
+        <h1>Hutang Tracker</h1>
         <div class="info">
             <p><strong>Hutang Saat Ini:</strong> <span id="current-debt">Loading...</span></p>
             <p><strong>Waktu Tersisa:</strong> <span id="time-left">Loading...</span></p>
@@ -80,11 +80,18 @@
         const logDisplay = document.getElementById("log");
 
         async function fetchData() {
-            const response = await fetch("/api/debt");
-            const data = await response.json();
-            debtDisplay.textContent = `Rp ${data.current_debt}`;
-            timeLeftDisplay.textContent = data.time_left;
-            updateLog(data.log);
+            try {
+                // Update this URL to your deployed backend
+                const response = await fetch("https://your-backend-url.com/api/debt");
+                const data = await response.json();
+                debtDisplay.textContent = `Rp ${data.current_debt}`;
+                timeLeftDisplay.textContent = data.time_left;
+                updateLog(data.log);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                debtDisplay.textContent = "Error";
+                timeLeftDisplay.textContent = "Error";
+            }
         }
 
         function updateLog(log) {
