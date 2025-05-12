@@ -3,9 +3,29 @@
   <head>
     <title>Global Chat Imonskart</title>
     <style>
-      body { font-family: sans-serif; padding: 20px; }
-      #chat-box { border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px; }
-      #chat-box div { margin-bottom: 5px; }
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+        background-color: #f4f4f4;
+      }
+      #chat-box {
+        border: 1px solid #ccc;
+        height: 300px;
+        overflow-y: scroll;
+        padding: 10px;
+        background: white;
+        margin-bottom: 10px;
+      }
+      #chat-box div {
+        margin-bottom: 5px;
+      }
+      input {
+        padding: 5px;
+        margin: 5px;
+      }
+      button {
+        padding: 6px 12px;
+      }
     </style>
   </head>
   <body>
@@ -17,7 +37,12 @@
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-      import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-database.js";
+      import {
+        getDatabase,
+        ref,
+        push,
+        onChildAdded
+      } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-database.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyClV-VFgaSfz6l3iOSopwtfK1LwAlL4i2w",
@@ -31,31 +56,33 @@
 
       const app = initializeApp(firebaseConfig);
       const db = getDatabase(app);
-
       const chatRef = ref(db, "globalChat");
 
       // Tampilkan pesan real-time
-      onChildAdded(chatRef, (data) => {
+      onChildAdded(chatRef, (snapshot) => {
+        const val = snapshot.val();
         const chatBox = document.getElementById("chat-box");
-        const val = data.val();
-        const el = document.createElement("div");
-        el.textContent = `${val.name}: ${val.message}`;
-        chatBox.appendChild(el);
+        const msgEl = document.createElement("div");
+        msgEl.textContent = `${val.name}: ${val.message}`;
+        chatBox.appendChild(msgEl);
         chatBox.scrollTop = chatBox.scrollHeight;
       });
 
       // Kirim pesan
       window.sendMessage = () => {
-        const name = document.getElementById("username").value || "Anon";
-        const message = document.getElementById("message").value;
-        if (message.trim() !== "") {
+        const nameInput = document.getElementById("username");
+        const msgInput = document.getElementById("message");
+        const name = nameInput.value.trim() || "Anon";
+        const message = msgInput.value.trim();
+        if (message) {
           push(chatRef, {
-            name: name,
-            message: message
+            name,
+            message,
+            timestamp: Date.now()
           });
-          document.getElementById("message").value = "";
+          msgInput.value = "";
         }
       };
     </script>
   </body>
-</html
+</html>
