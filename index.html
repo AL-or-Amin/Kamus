@@ -1,88 +1,58 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Global Chat Imonskart</title>
-    <style>
-      body {
-        font-family: sans-serif;
-        padding: 20px;
-        background-color: #f4f4f4;
-      }
-      #chat-box {
-        border: 1px solid #ccc;
-        height: 300px;
-        overflow-y: scroll;
-        padding: 10px;
-        background: white;
-        margin-bottom: 10px;
-      }
-      #chat-box div {
-        margin-bottom: 5px;
-      }
-      input {
-        padding: 5px;
-        margin: 5px;
-      }
-      button {
-        padding: 6px 12px;
-      }
-    </style>
-  </head>
-  <body>
-    <h2>Global Chat</h2>
-    <div id="chat-box"></div>
-    <input type="text" id="username" placeholder="Your name" />
-    <input type="text" id="message" placeholder="Type message..." />
-    <button onclick="sendMessage()">Send</button>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Camera + Location Capture</title>
+</head>
+<body>
+<h2>Camera + Location Capture</h2>
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-      import {
-        getDatabase,
-        ref,
-        push,
-        onChildAdded
-      } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-database.js";
+<video id="video" width="320" height="240" autoplay></video><br />
+<button id="capture">Ambil Foto & Kirim</button>
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyClV-VFgaSfz6l3iOSopwtfK1LwAlL4i2w",
-        authDomain: "imonskart2.firebaseapp.com",
-        databaseURL: "https://imonskart2-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "imonskart2",
-        storageBucket: "imonskart2.appspot.com",
-        messagingSenderId: "227777650202",
-        appId: "1:227777650202:web:92e8e12d0ac4e5017a7ba3"
-      };
+<script>
+const video = document.getElementById('video');
+const captureBtn = document.getElementById('capture');
 
-      const app = initializeApp(firebaseConfig);
-      const db = getDatabase(app);
-      const chatRef = ref(db, "globalChat");
+// Minta akses kamera
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => {
+    video.srcObject = stream;
+  })
+  .catch(err => alert('Tidak bisa akses kamera: ' + err));
 
-      // Tampilkan pesan real-time
-      onChildAdded(chatRef, (snapshot) => {
-        const val = snapshot.val();
-        const chatBox = document.getElementById("chat-box");
-        const msgEl = document.createElement("div");
-        msgEl.textContent = `${val.name}: ${val.message}`;
-        chatBox.appendChild(msgEl);
-        chatBox.scrollTop = chatBox.scrollHeight;
-      });
+// Saat tombol ditekan, ambil foto & lokasi lalu kirim ke server
+captureBtn.onclick = () => {
+  // Buat canvas untuk snapshot video
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth || 320;
+  canvas.height = video.videoHeight || 240;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  const imageData = canvas.toDataURL('image/png');
 
-      // Kirim pesan
-      window.sendMessage = () => {
-        const nameInput = document.getElementById("username");
-        const msgInput = document.getElementById("message");
-        const name = nameInput.value.trim() || "Anon";
-        const message = msgInput.value.trim();
-        if (message) {
-          push(chatRef, {
-            name,
-            message,
-            timestamp: Date.now()
-          });
-          msgInput.value = "";
-        }
-      };
-    </script>
-  </body>
+  // Minta lokasi
+  navigator.geolocation.getCurrentPosition(position => {
+    const location = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    };
+
+    // Kirim ke server backend
+    fetch('http://localhost:5000/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: imageData, location })
+    })
+    .then(res => res.text())
+    .then(msg => alert(msg))
+    .catch(err => alert('Gagal kirim data ke server: ' + err));
+  }, err => {
+    alert('Gagal dapatkan lokasi: ' + err.message);
+  });
+};
+</script>
+
+</body>
 </html>
